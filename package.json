@@ -1,0 +1,52 @@
+{
+  "name": "pi-prompt-composer",
+  "version": "0.1.0",
+  "description": "A Pi extension that composes contextual skill guidance into the runtime system prompt.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Jordan Foreman",
+  "keywords": [
+    "pi-package",
+    "pi-extension",
+    "prompt-composer",
+    "skills"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JordanForeman/pi-prompt-composer.git"
+  },
+  "bugs": {
+    "url": "https://github.com/JordanForeman/pi-prompt-composer/issues"
+  },
+  "homepage": "https://github.com/JordanForeman/pi-prompt-composer#readme",
+  "exports": {
+    ".": "./src/index.ts",
+    "./core": "./src/core.ts"
+  },
+  "files": [
+    "src",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "node --import tsx --test test/**/*.test.ts",
+    "typecheck": "tsc --noEmit",
+    "check": "npm run typecheck && npm test"
+  },
+  "pi": {
+    "extensions": [
+      "./src/index.ts"
+    ]
+  },
+  "peerDependencies": {
+    "@earendil-works/pi-ai": "*",
+    "@earendil-works/pi-coding-agent": "*"
+  },
+  "devDependencies": {
+    "@earendil-works/pi-ai": "0.78.0",
+    "@earendil-works/pi-coding-agent": "0.78.0",
+    "@types/node": "^22.10.2",
+    "tsx": "^4.20.5",
+    "typescript": "^5.9.3"
+  }
+}
