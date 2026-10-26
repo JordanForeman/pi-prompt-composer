@@ -153,6 +153,38 @@ test("composeRuntimePrompt ranks selected skills by priority", async () => {
   ]);
 });
 
+test("composeRuntimePrompt skips oversized skills without hiding later skills that fit", async () => {
+  const root = await mkdtemp(path.join(tmpdir(), "prompt-composer-budget-"));
+  const cwd = await mkdtemp(path.join(tmpdir(), "prompt-composer-budget-cwd-"));
+
+  await writeSkill(
+    root,
+    "conventions/large/SKILL.md",
+    "name: large\ndescription: Large\ninjection: always",
+    "x".repeat(200),
+  );
+  await writeSkill(
+    root,
+    "conventions/small/SKILL.md",
+    "name: small\ndescription: Small\ninjection: always",
+    "Small body",
+  );
+
+  const entries = await discoverSkillEntries({ roots: [root] });
+  const result = await composeRuntimePrompt({
+    skills: entries,
+    context: { cwd, platform: process.platform, activeTools: [], prompt: "" },
+    maxInjectedChars: 100,
+  });
+
+  assert.deepEqual(result.composition.selected.map((selection) => selection.relativePath), [
+    "conventions/small/SKILL.md",
+  ]);
+  assert.equal(result.composition.truncated, true);
+  assert.equal(result.text.includes("Small body"), true);
+  assert.equal(result.text.includes("x".repeat(200)), false);
+});
+
 test("composeRuntimePrompt gates low-priority skills by relevance floor", async () => {
   const root = await mkdtemp(path.join(tmpdir(), "prompt-composer-floor-"));
   const cwd = await mkdtemp(path.join(tmpdir(), "prompt-composer-floor-cwd-"));
