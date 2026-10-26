@@ -369,7 +369,7 @@ export async function composeRuntimePrompt(options: ComposeRuntimePromptOptions)
     const block = `### ${candidate.relativePath}\n${content}`;
     if (currentChars + block.length > maxInjectedChars) {
       truncated = true;
-      break;
+      continue;
     }
 
     blocks.push(block);
